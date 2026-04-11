@@ -82,13 +82,6 @@ body {
   -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
 }
 
-.founder-image {
-  width: 100%;
-  height: auto;
-  border-radius: 8px; /* Optional: adds rounded corners */
-  display: block;
-}
-
 /* Layout */
 .container {
   width: 100%;
@@ -413,6 +406,13 @@ p {
   100% {
     left: 200%;
   }
+}
+
+.founder-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px; /* Optional: adds rounded corners */
+  display: block;
 }
 
 /* Problem Section (Funnel) */
