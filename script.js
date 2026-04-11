@@ -2,6 +2,19 @@
  * FraFuel.ai - Main Interaction Script
  */
 
+// ==========================================
+// SUPABASE CONFIGURATION
+// Paste your project URL and ANON API key here
+// ==========================================
+const SUPABASE_URL = 'https://hcujwqcdaexbqmcpgpxp.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_zn3-v4HsNj-HtLuU-gkTxA_LCCCPMvs';
+
+// Initialize Supabase Client (CDN loaded in HTML)
+let supabase;
+if (window.supabase) {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // 1. Smooth Scrolling for Navigation Links
@@ -73,5 +86,70 @@ document.addEventListener('DOMContentLoaded', () => {
       navbar.style.boxShadow = 'none';
     }
   });
+  // 5. Lead Capture Form Handling
+  const leadForm = document.getElementById('leadCaptureForm');
+  const formMessage = document.getElementById('formMessage');
+  const submitBtn = document.getElementById('submitLeadBtn');
+
+  if (leadForm) {
+    leadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('leadName').value.trim();
+      const phone = document.getElementById('leadPhone').value.trim();
+      const email = document.getElementById('leadEmail').value.trim();
+
+      // Basic validation
+      if (!name || !phone) {
+        showMessage('Please provide your name and WhatsApp number.', 'error');
+        return;
+      }
+
+      // Show loading state
+      const originalBtnHtml = submitBtn.innerHTML;
+      submitBtn.innerHTML = 'Sending...';
+      submitBtn.disabled = true;
+
+      try {
+        if (!supabase) {
+          throw new Error('Supabase client not initialized. Check your credentials in script.js.');
+        }
+
+        // Insert into Supabase
+        const { data, error } = await supabase
+          .from('leads')
+          .insert([
+            { full_name: name, phone_number: phone, email: email, source: 'website_form' }
+          ]);
+
+        if (error) throw error;
+
+        // Success
+        leadForm.reset();
+        showMessage('Awesome! Check your WhatsApp shortly.', 'success');
+
+        // Optional: Redirect to a Make.com Webhook or specific WA Link directly
+        // window.open(`https://wa.me/917020794853?text=Hey,%20I%20just%20signed%20up.%20My%20name%20is%20${encodeURIComponent(name)}`, '_blank');
+
+      } catch (err) {
+        console.error('Error submitting lead:', err);
+        showMessage(err.message || 'Something went wrong. Please try again.', 'error');
+      } finally {
+        submitBtn.innerHTML = originalBtnHtml;
+        submitBtn.disabled = false;
+      }
+    });
+  }
+
+  function showMessage(msg, type) {
+    if (!formMessage) return;
+    formMessage.textContent = msg;
+    formMessage.style.color = type === 'success' ? '#00F0FF' : '#FF4A4A';
+
+    // Clear message after 5 seconds
+    setTimeout(() => {
+      formMessage.textContent = '';
+    }, 5000);
+  }
 
 });
