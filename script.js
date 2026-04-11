@@ -11,8 +11,17 @@ const SUPABASE_ANON_KEY = 'sb_publishable_zn3-v4HsNj-HtLuU-gkTxA_LCCCPMvs';
 
 // Initialize Supabase Client (CDN loaded in HTML)
 let supabase;
-if (window.supabase) {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+try {
+  if (window.supabase) {
+    // We pass an empty auth configuration to prevent localStorage security errors on file:/// URLs
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: false // Prevents crashing on file:/// due to blocked localStorage
+      }
+    });
+  }
+} catch (err) {
+  console.error("Supabase Initialization Error (likely due to local file:/// preview):", err);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
