@@ -59,7 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Select all elements with hidden classes
   const hiddenElements = document.querySelectorAll('.hidden-bottom, .hidden-scale');
 
-  hiddenElements.forEach(el => observer.observe(el));
+  try {
+    hiddenElements.forEach(el => observer.observe(el));
+  } catch (error) {
+    console.error('Observer failed', error);
+    // Fallback: show everything immediately if observer crashes
+    hiddenElements.forEach(el => el.classList.add('show'));
+  }
+
+  // Fallback: Show all elements after 1.5 seconds regardless, in case observer doesn't fire
+  setTimeout(() => {
+    hiddenElements.forEach(el => el.classList.add('show'));
+  }, 1500);
 
   // 3. Optional Micro-interaction: Subtle Mouse Move Parallax on Hero Visual
   const heroVisual = document.querySelector('.hero-visual');
