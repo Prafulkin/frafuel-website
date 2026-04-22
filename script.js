@@ -7,7 +7,7 @@
 // Paste your project URL and ANON API key here
 // ==========================================
 const SUPABASE_URL = 'https://hcujwqcdaexbqmcpgpxp.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_zn3-v4HsNj-HtLuU-gkTxA_LCCCPMvs';
+const SUPABASE_ANON_KEY = 'seyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhjdWp3cWNkYWV4YnFtY3BncHhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDk0MzEsImV4cCI6MjA5MTQyNTQzMX0.0RKUtNb7usTRKWaO09s7CtjrxVT1JlIhYNFQKoDUfbs';
 
 // Initialize Supabase Client (CDN loaded in HTML)
 let supabase;
@@ -99,13 +99,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const navbar = document.querySelector('.navbar');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
-      navbar.style.background = 'rgba(11, 15, 20, 0.9)';
+      navbar.style.background = 'rgba(11, 11, 11, 0.95)';
       navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.5)';
     } else {
-      navbar.style.background = 'rgba(11, 15, 20, 0.8)';
+      navbar.style.background = 'rgba(11, 11, 11, 0.8)';
       navbar.style.boxShadow = 'none';
     }
   });
+
+  // 6. FAQ Accordion
+  const faqQuestions = document.querySelectorAll('.faq-question');
+  faqQuestions.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isActive = btn.classList.contains('active');
+
+      // Close all others
+      faqQuestions.forEach(q => {
+        q.classList.remove('active');
+        q.nextElementSibling.style.maxHeight = null;
+      });
+
+      // Open current if not active
+      if (!isActive) {
+        btn.classList.add('active');
+        const answer = btn.nextElementSibling;
+        answer.style.maxHeight = answer.scrollHeight + "px";
+      }
+    });
+  });
+
   // 5. Lead Capture Form Handling
   const leadForm = document.getElementById('leadCaptureForm');
   const formMessage = document.getElementById('formMessage');
