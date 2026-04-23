@@ -107,26 +107,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 6. FAQ Accordion
-  const faqQuestions = document.querySelectorAll('.faq-question');
-  faqQuestions.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const isActive = btn.classList.contains('active');
+ // 6. FAQ Accordion
+const faqQuestions = document.querySelectorAll('.faq-question');
+faqQuestions.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const isActive = btn.classList.contains('active');
 
-      // Close all others
-      faqQuestions.forEach(q => {
-        q.classList.remove('active');
-        q.nextElementSibling.style.maxHeight = null;
-      });
-
-      // Open current if not active
-      if (!isActive) {
-        btn.classList.add('active');
-        const answer = btn.nextElementSibling;
-        answer.style.maxHeight = answer.scrollHeight + "px";
-      }
+    // Close all others
+    faqQuestions.forEach(q => {
+      q.classList.remove('active');
+      const ans = q.nextElementSibling;
+      ans.style.maxHeight = null;
     });
+
+    // Open current if it wasn't already open
+    if (!isActive) {
+      btn.classList.add('active');
+      const answer = btn.nextElementSibling;
+      answer.style.maxHeight = answer.scrollHeight + "px";
+    }
   });
+});
+
+  
 
   // 5. Lead Capture Form Handling
   const leadForm = document.getElementById('leadCaptureForm');
